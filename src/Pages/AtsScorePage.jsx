@@ -1,4 +1,4 @@
-import React, { useMemo, useRef, useState } from "react";
+import React, { useMemo, useState } from "react";
 import { extractTextFromPdf } from "../utils/pdf";
 import { geminiApi } from "../services/api";
 
@@ -31,7 +31,6 @@ const AtsScorePage = () => {
   const [aiStatus, setAiStatus] = useState("");
   const [aiFeedback, setAiFeedback] = useState("");
   const insights = useMemo(() => scoreText(resume, role), [resume, role]);
-  const fileInputRef = useRef(null);
 
   const handlePdfUpload = async (e) => {
     const file = e.target.files?.[0];
@@ -86,33 +85,19 @@ const AtsScorePage = () => {
       </div>
       <div className="grid gap-3 lg:grid-cols-2 lg:gap-4">
         <div className="glass-panel rounded-2xl p-5 border border-[rgba(250,203,181,0.3)] space-y-3">
-          <div className="flex flex-wrap items-center gap-2 justify-between">
+          <div className="grid sm:grid-cols-2 gap-2 items-center">
             <label className="text-sm text-muted">Upload resume PDF</label>
-            <div className="flex items-center gap-2">
-              <input
-                ref={fileInputRef}
-                className="hidden"
-                type="file"
-                accept="application/pdf"
-                onChange={handlePdfUpload}
-              />
-              <button
-                type="button"
-                className="ghost-btn"
-                onClick={() => fileInputRef.current?.click()}
-              >
-                Choose PDF
-              </button>
-              {pdfName ? (
-                <span className="text-sm text-muted">
-                  {pdfLoading ? "Reading..." : pdfName}
-                </span>
-              ) : null}
-            </div>
+            <input
+              type="file"
+              accept="application/pdf"
+              onChange={handlePdfUpload}
+            />
           </div>
-          {pdfName ? null : (
-            <div className="text-xs text-muted">Accepted format: .pdf</div>
-          )}
+          {pdfName ? (
+            <div className="text-sm text-muted">
+              {pdfLoading ? "Reading..." : `Loaded: ${pdfName}`}
+            </div>
+          ) : null}
           <label className="text-sm text-muted">Paste your resume text</label>
           <textarea
             className="input-base min-h-40 sm:min-h-56"
